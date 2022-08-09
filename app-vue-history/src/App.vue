@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-    </div>
+    </div> -->
     <keep-alive :include="loadedRouteNames">
       <router-view/>
     </keep-alive>
@@ -21,6 +21,7 @@ export default {
     if (window.__POWERED_BY_QIANKUN__) {
       this.parentProps.onGlobalStateChange(state => {
         const { childRoute } = state['app-vue-history'];
+        console.log('childRoute', childRoute)
         const loadedRoutes = childRoute.map(item => this.$router.resolve(item));
         console.log('loadedRoutes', loadedRoutes);
         const loadedRouteNames = loadedRoutes.map(item => item.route.name);

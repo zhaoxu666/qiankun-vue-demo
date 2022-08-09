@@ -39,16 +39,27 @@ const actions = initGlobalState({});
 export default {
   data() {
     return {
+      // 侧边栏数据源
       menuData: [
         { name: '子应用1的home', value: '/app-vue-hash/#/' },
         { name: '子应用1的about', value: '/app-vue-hash/#/about' },
+        { name: '子应用1的详情1', value: '/app-vue-hash/#/detail/1' },
+        { name: '子应用1的详情2', value: '/app-vue-hash/#/detail/2' },
         { name: '子应用2的home', value: '/app-vue-history/' },
         { name: '子应用2的about', value: '/app-vue-history/about' },
+        { name: '子应用2的demo', value: '/app-vue-history/demo/index' },
+        { name: '子应用2的详情1', value: '/app-vue-history/detail/1' },
+        { name: '子应用2的详情2', value: '/app-vue-history/detail/2' },
         { name: '主应用的about', value: '/about' },
+        { name: '主应用的home', value: '/' }
       ],
+      // 页签数据源
       allTabs: [],
+      // 当前选中页签
       currentTab: '',
-      loadedApp: {}, // 已加载的微应用
+      // 已加载的微应用
+      loadedApp: {},
+      // 微应用的数据
       microApps: [
         { 
           name: 'app-vue-hash', 
@@ -62,22 +73,32 @@ export default {
           container: '#appContainer2',
           prefixPath: '/app-vue-history',
         }
-      ], // 微应用的数据
+      ],
     }
   },
   methods: {
     changeMenu (indexPath) {
+      // 判断如果当前点击的tag是否跟正在激活的tag是一个，如果是直接返回
       if (this.currentTab === indexPath) return;
+      // 如果不是，看当前tags中是否存在正在激活的tag
       const existTab = this.allTabs.find(item => item.value === indexPath);
+      // 如果tags中存在正在激活的tag， 直接将选中状态复制给找到的那个tag
       if (existTab) {
         this.currentTab = existTab.value;
       } else {
+        // tags中不存在正在激活的tag
         // 先判断是子应用还是主应用，再判断子应用是否已加载
         const microApp = this.microApps.find(item => indexPath.includes(item.prefixPath));
+        // 判断是子应用
         if (microApp) {
+          // 获取到子应用的子路由的path
           const childRoutePath = indexPath.replace(microApp.prefixPath,'');
+          console.log('childRoutePath', childRoutePath)
+          // 判断子应用没有注册过
           if (!this.loadedApp[microApp.name]) {
+            // 注册子应用
             const app = loadMicroApp(microApp); // 多了个参数 prefixPath，但是可以忽略
+            // 存入loadedApp中
             this.loadedApp[microApp.name] = {
               app,
               childRoute: [],
@@ -98,6 +119,7 @@ export default {
     removeTab (tab) {
       // 先判断是子应用还是主应用
       const microApp = this.microApps.find(item => tab.includes(item.prefixPath));
+      // 如果是子应用
       if (microApp) {
         // 移除子应用已缓存的应用
         const childRoutePath = tab.replace(microApp.prefixPath,'');
@@ -106,6 +128,7 @@ export default {
         actions.setGlobalState(this.loadedApp);
         // 再当前微应用的页面是否已全部关闭
         if (this.loadedApp[microApp.name].childRoute.length === 0) {
+          // 卸载微应用
           this.loadedApp[microApp.name].app.unmount();
           this.loadedApp[microApp.name] = null;
         }
@@ -131,18 +154,37 @@ export default {
     initTab(){
       let { fullPath } = this.$route;
       const { pathname } = window.location;
+      console.log(fullPath, pathname)
       // 主应用的路由页面
       if (fullPath === '/' && pathname !==  '/') {
         fullPath = pathname;
       }
-      // history 子应用路由页面，需要去掉 #/
+      // history 子应用路由页面，需要去掉 #/ 防止刷新后找不到对应的路径
+      console.log('fullPath', fullPath)
       if (fullPath.includes('app-vue-history') && fullPath.includes('#')) {
         fullPath = pathname
       }
       this.changeMenu(fullPath);
     }
   },
+  watch: {
+    // $route () {
+    //   console.log('watch', this.$route)
+    //   if(this.$route.path.includes('detail')) {
+    //     let hasTab = this.allTabs.find((tab) => {return tab.value === this.$route.path})
+    //     console.log('hasTab', hasTab)
+    //       if (!hasTab) {
+    //         this.allTabs.push({
+    //           name: `详情${this.$route.path}`,
+    //           value: this.$route.path
+    //         });
+    //         this.currentTab = this.$route.path
+    //     }
+    //   }
+    // }
+  },
   mounted() {
+    // 挂载调用初始化Tab
     this.initTab();
   },
 }

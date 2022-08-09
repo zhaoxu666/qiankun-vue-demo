@@ -1,11 +1,17 @@
 <template>
   <div class="about">
     <h1>This is app-vue-history about page</h1>
+    <input v-model="inputValue" />
   </div>
 </template>
 <script>
 export default {
   name: 'About',
+  data () {
+    return {
+      inputValue: ''
+    }
+  },
   activated() {
     console.log('history about activated');
   },
