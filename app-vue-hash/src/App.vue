@@ -4,7 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
-    <keep-alive :include="loadedRouteNames">
+    <keep-alive :include="loadedRouteNames" :exclude="['Detail']">
       <router-view/>
     </keep-alive>
   </div>

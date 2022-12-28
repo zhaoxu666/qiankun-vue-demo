@@ -3,14 +3,20 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import routes from './router';
-import store from './store';
+import microStore from './store';
+import Vuex from 'vuex'
+Vue.use(Vuex)
 
 Vue.config.productionTip = false;
 
 let router = null;
 let instance = null;
 
-function render({ container } = {}) {
+function render(props) {
+  const { container, store } = props
+  if (!container) container = {}
+  Vue.prototype.microStore = microStore
+  Vue.observable(store)
   router = new VueRouter({
     routes,
   });

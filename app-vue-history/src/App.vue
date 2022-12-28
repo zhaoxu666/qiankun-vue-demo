@@ -4,8 +4,8 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
-    <keep-alive :include="loadedRouteNames">
-      <router-view/>
+    <keep-alive :include="loadedRouteNames" :exclude="['Detail']">
+      <router-view :key="key"/>
     </keep-alive>
   </div>
 </template>
@@ -30,6 +30,11 @@ export default {
       }, true);
     }
   },
+  computed: {
+    key () {
+      return this.$route.path
+    }
+  }
 }
 </script>
 
