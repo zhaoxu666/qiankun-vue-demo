@@ -49,18 +49,18 @@ export default {
   },
   computed: {
     num () {
-      return this.$store.state.global.num
+      return this.globalStore.state.num
     },
     microNum () {
-      return this.microStore.state.microNum
+      return this.$store.state.microNum
     },
     inputList () {
-      console.log('input list change', this.$store.state.global.list)
-      return this.$store.state.global.list
+      console.log('input list change', this.globalStore.state.list)
+      return this.globalStore.state.list
     },
     obj () {
-      console.log('input list obj', this.$store.state.global.obj)
-      return this.$store.state.global.obj
+      console.log('input list obj', this.globalStore.state.obj)
+      return this.globalStore.state.obj
     }
   },
   watch: {
@@ -75,25 +75,25 @@ export default {
       // this.$shared.setNum(this.count)
       // console.log(this.$shared.getNum())
       this.count++
-      this.$store.dispatch('global/setNum', this.count)
+      this.globalStore.dispatch('setNum', this.count)
      
     },
     handleChangeMicroNum () {
       this.count++
-      this.microStore.dispatch('setMicroNum', this.count)
+      this.$store.dispatch('setMicroNum', this.count)
     },
     handleChangeMessage () {
-      this.$store.dispatch('global/setMessage', `hello qiankun ${this.count}`)
+      this.globalStore.dispatch('setMessage', `hello qiankun ${this.count}`)
     },
     async handleAddItem () {
       const item = {
         id: this.id
       }
-      await this.$store.dispatch('global/addList', item)
+      await this.globalStore.dispatch('addList', item)
       this.id++
     },
     async handleDeleteItem () {
-      this.$store.dispatch('global/deleteItem')
+      this.globalStore.dispatch('deleteItem')
     },
     async handleSetObj () {
       const item = {
@@ -101,12 +101,12 @@ export default {
           name: `zhaoxu${this.id}`
         }
       }
-      await this.$store.dispatch('global/addObj', item)
+      await this.globalStore.dispatch('addObj', item)
       this.id++
     },
     async handleDeleteKey () {
       this.id--
-      await this.$store.dispatch('global/deleteObj', this.id)
+      await this.globalStore.dispatch('deleteObj', this.id)
     }
   },
   created () {

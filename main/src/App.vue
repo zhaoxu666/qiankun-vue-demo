@@ -33,9 +33,8 @@
 </template>
 
 <script>
-import { loadMicroApp, initGlobalState } from 'qiankun';
-import shared from './utils/shared'
-import store from './store'
+import { loadMicroApp, initGlobalState } from 'qiankun'
+import store from './globalStore'
 // 初始化 state
 const actions = initGlobalState({});
 export default {
@@ -68,14 +67,14 @@ export default {
           entry: 'http://localhost:1111', 
           container: '#appContainer1',
           prefixPath: '/app-vue-hash',
-          props: { store },
+          props: { globalStore: store },
         },
         { 
           name: 'app-vue-history',
           entry: 'http://localhost:2222', 
           container: '#appContainer2',
           prefixPath: '/app-vue-history',
-          props: { store },
+          props: { globalStore: store },
         }
       ],
     }

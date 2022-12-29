@@ -3,7 +3,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import routes from './router';
-import microStore from './store';
+import store from './store';
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
@@ -13,10 +13,11 @@ let router = null;
 let instance = null;
 
 function render(props) {
-  const { container, store } = props
+  const { container, globalStore } = props
   if (!container) container = {}
-  Vue.prototype.microStore = microStore
-  Vue.observable(store)
+  Vue.observable(globalStore)
+  Vue.prototype.globalStore = globalStore
+  
   router = new VueRouter({
     routes,
   });
